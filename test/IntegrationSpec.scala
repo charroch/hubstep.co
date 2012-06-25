@@ -14,12 +14,9 @@ class IntegrationSpec extends Specification {
   "Application" should {
     
     "work from within a browser" in {
-      running(TestServer(3333), HTMLUNIT) { browser =>
-
-        browser.goTo("http://localhost:3333/")
-
-        browser.pageSource must contain("Your new application is ready.")
-       
+      running(TestServer(3345), HTMLUNIT) { browser =>
+        browser.goTo("http://localhost:3345/")
+        browser.pageSource must contain("hello world")
       }
     }
     

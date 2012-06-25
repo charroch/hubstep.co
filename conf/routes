@@ -18,3 +18,5 @@ GET     /signup                     securesocial.controllers.Registration.signUp
 POST    /signup                     securesocial.controllers.Registration.handleSignUp
 
 GET     /authenticate/:provider     securesocial.controllers.LoginPage.authenticate(provider)
+
+GET     /android/login              controllers.Android.login
