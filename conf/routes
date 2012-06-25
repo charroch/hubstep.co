@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /test                       controllers.Application.test
+GET     /as                       controllers.Application.async
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -18,3 +19,10 @@ GET     /signup                     securesocial.controllers.Registration.signUp
 POST    /signup                     securesocial.controllers.Registration.handleSignUp
 
 GET     /authenticate/:provider     securesocial.controllers.LoginPage.authenticate(provider)
+
+
+# User REST interface
+#GET     /user/:username             controllers.User.index(username)
+#POST    /user                       controllers.User.index
+#PUT     /user/:username               controllers.User.index(username)
+#DELETE  /user/:username                controllers.User.index(username)

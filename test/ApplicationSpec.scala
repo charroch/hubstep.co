@@ -30,4 +30,13 @@ class ApplicationSpec extends Specification {
       }
     }
   }
-}
+
+  "A new ANDROID user" should {
+    "create a new account using Google auth token" in {
+      running(FakeApplication()) {
+        success
+      }
+    }
+  }
+
+}                                        running(FakeApplication()) {
