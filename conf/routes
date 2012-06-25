@@ -20,6 +20,7 @@ POST    /signup                     securesocial.controllers.Registration.handle
 
 GET     /authenticate/:provider     securesocial.controllers.LoginPage.authenticate(provider)
 
+GET     /android/login              controllers.Android.login
 
 # User REST interface
 #GET     /user/:username             controllers.User.index(username)

@@ -1,5 +1,7 @@
 package controllers
 
+import play.api._
+import libs.ws.WS
 import play.api.mvc._
 import play.api.libs.concurrent.Promise
 import play.api.libs.ws.WS
