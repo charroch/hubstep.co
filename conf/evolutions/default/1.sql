@@ -8,6 +8,11 @@ CREATE TABLE task (
     label varchar(255)
 );
 
+
+CREATE TABLE user(
+
+)
+
 # --- !Downs
 
 DROP TABLE task;
