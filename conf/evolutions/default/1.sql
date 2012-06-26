@@ -3,7 +3,7 @@
 # --- !Ups
 
 CREATE TABLE account (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL,
     email varchar(255) NOT NULL UNIQUE,
     password varchar(255) NOT NULL,
     username varchar(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE tag (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL,
     uid varchar(255) NOT NULL UNIQUE,
 
     accountId INT NOT NULL,
