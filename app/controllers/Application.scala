@@ -9,7 +9,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
 
   def index = Action {
     implicit request =>
-      Ok(views.html.index("hello world"))
+      Ok(views.html.landing("hello world"))
   }
 
   def index2 = SecuredAction() {
@@ -22,12 +22,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
       Ok(views.html.index("welcome@ " + request.user.displayName))
   }
 
-
-  def feedTitle(feedUrl: String) = Action {
-    Async {
-      WS.url(feedUrl).get().map { response =>
-        Ok("Feed title: " + (response.json \ "title").as[String])
-      }
-    }
+  def login = Action {
+    implicit request => Ok(views.html.login())
   }
+
 }

@@ -10,7 +10,8 @@ GET     /test                       controllers.Application.test
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Login page
-GET     /login                      securesocial.controllers.LoginPage.login
+GET     /login                      controllers.Application.login
+GET     /social/login                      securesocial.controllers.LoginPage.login
 GET     /logout                     securesocial.controllers.LoginPage.logout
 
 # User Registration
