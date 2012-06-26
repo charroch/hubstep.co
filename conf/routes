@@ -11,7 +11,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Login page
 GET     /login                      controllers.Application.login
-GET     /social/login                      securesocial.controllers.LoginPage.login
+GET     /social/login               securesocial.controllers.LoginPage.login
 GET     /logout                     securesocial.controllers.LoginPage.logout
 
 # User Registration
