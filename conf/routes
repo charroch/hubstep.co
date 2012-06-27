@@ -5,13 +5,13 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /test                       controllers.Application.test
-GET     /as                       controllers.Application.async
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Login page
-GET     /login                      securesocial.controllers.LoginPage.login
+GET     /login                      controllers.Application.login
+GET     /social/login               securesocial.controllers.LoginPage.login
 GET     /logout                     securesocial.controllers.LoginPage.logout
 
 # User Registration
@@ -22,8 +22,8 @@ GET     /authenticate/:provider     securesocial.controllers.LoginPage.authentic
 
 GET     /android/login              controllers.Android.login
 
-# User REST interface
-#GET     /user/:username             controllers.User.index(username)
-#POST    /user                       controllers.User.index
-#PUT     /user/:username               controllers.User.index(username)
-#DELETE  /user/:username                controllers.User.index(username)
+
+# User REST services
+GET      /users                      controllers.UserController.all
+#GET     /api/user/:id               controllers.User.auth(username)
+#POST    /api/user                   controllers.User.create

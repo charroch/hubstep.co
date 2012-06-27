@@ -3,13 +3,16 @@ package controllers
 import play.api._
 import libs.ws.WS
 import play.api.mvc._
-import play.api.libs.concurrent.Promise
-import play.api.libs.ws.WS
-import play.api.libs.ws
+import securesocial.core.UserService
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
-  def index = SecuredAction() {
+  def index = Action {
+    implicit request =>
+      Ok(views.html.landing("hello world"))
+  }
+
+  def index2 = SecuredAction() {
     implicit request =>
       Ok(views.html.index("Your new application is ready." + request.user))
   }
@@ -19,20 +22,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
       Ok(views.html.index("welcome@ " + request.user.displayName))
   }
 
-
-  val twitter: Promise[ws.Response] = WS.url("http://search.twitter.com/search.json?q=blue%20angels&rpp=5&include_entities=true&result_type=mixed").get()
-
-  val promiseOfResult: Promise[Result] = twitter.map { pi =>
-    Ok("PI value computed: " + pi)
-  }
-
-  def async = Action {
-    Async {
-      twitter.map {
-        response =>
-          Ok("Feed title: " + (response.json \ "results"))
-      }
-    }
+  def login = Action {
+    implicit request => Ok(views.html.login())
   }
 
 }

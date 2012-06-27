@@ -8,6 +8,7 @@ object ApplicationBuild extends Build {
   val appVersion = "0.0.1-SNAPSHOT"
 
   val appDependencies = Seq(
+    "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
     // Add your project dependencies here,
   )
 
@@ -17,6 +18,6 @@ object ApplicationBuild extends Build {
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     // Add your own project settings here
-  ).dependsOn(secureSocial).aggregate(secureSocial)
+  ).dependsOn(secureSocial)
 
 }
