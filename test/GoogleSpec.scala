@@ -7,6 +7,13 @@ import org.specs2.matcher.Expectable
 import play.api.libs.openid.OpenID
 import play.api.libs.concurrent.{Thrown, Redeemed}
 import java.util.concurrent.TimeUnit
+import play.api.test.FakeApplication
+import play.api.test.Helpers._
+import api.Google.GoogleUser
+import play.api.test.FakeApplication
+import play.api.libs.concurrent.Redeemed
+import scala.Some
+import play.api.libs.concurrent.Thrown
 
 class GoogleSpec extends Specification {
 
@@ -65,6 +72,7 @@ class GoogleSpec extends Specification {
   }
 
   "A call to Google Service" should {
+
     "fail if wrong token provided" in {
       api.Google.fetch("wrong").extend(_.value match {
         case Thrown(n) => success
@@ -73,13 +81,14 @@ class GoogleSpec extends Specification {
     }
 
     "not fail if token is correct" in {
-      api.Google.fetch("ya29.AHES6ZSUBLq7E-AcU6aP8DwsTSI_c_QpLcXam8WaxTlc4g").extend(_.value match {
+      api.Google.fetch("WILLNOWORK").extend(_.value match {
         case Redeemed(user) => {
           user.name must be_==("Carl-Gustaf Harroch")
           success
         }
         case _ => failure
       }).await(10, TimeUnit.SECONDS).get
-    }
+    }.pendingUntilFixed("Get real token from server")
+
   }
 }

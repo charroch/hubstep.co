@@ -12,17 +12,21 @@ class DBEvolutionsSpec extends Specification {
 
   "Evolution 1.sql" should {
     "be applied without errors" in {
-      evolutionFor("default")
-      running(FakeApplication()) {
+      running(FakeAppNoPlugin) {
         DB.withConnection {
           implicit connection =>
             SQL("select count(1) from account").execute()
-            SQL("select count(1) from tag").execute()
+            //SQL("select count(1) from tag").execute()
         }
       }
       success
     }
 
   }
+
+  val FakeAppNoPlugin = FakeApplication(
+    withoutPlugins = Seq("securesocial.core.providers.GoogleProvider"),
+    additionalConfiguration = inMemoryDatabase()
+  )
 
 }

@@ -8,10 +8,15 @@ class UserSpec extends Specification {
 
   "A user" should {
     "be created" in {
-      running(FakeApplication()) {
+      running(FakeAppNoPlugin) {
         User.create(User("carl@novoda.com", "test", null))
         User.findAll() must have size 1
       }
     }
   }
+
+  val FakeAppNoPlugin = FakeApplication(
+    withoutPlugins = Seq("securesocial.core.providers.GoogleProvider"),
+    additionalConfiguration = inMemoryDatabase()
+  )
 }
