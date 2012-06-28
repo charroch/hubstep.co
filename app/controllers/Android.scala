@@ -1,14 +1,11 @@
 package controllers
 
-import play.api.mvc.{RequestHeader, Action, Controller}
+import play.api.mvc.{Action, Controller}
 import play.api.libs.concurrent.Promise
-import play.api.libs.ws
-import play.api.libs.ws.WS
-import play.api.Logger
-import api.Google
 import models.User
+import java.util.concurrent.TimeUnit
 
-object Android extends Controller with Google {
+object Android extends Controller {
 
   object Header {
     val AUTH = "X-Android-Authorization"
@@ -23,12 +20,17 @@ object Android extends Controller with Google {
             Unauthorized("Token must be valid")
           } else {
             Async {
-              auth(token) {
+              plugins.Application.api.google.auth(token) {
                 googleUser =>
                   import api.GoogleUser._
                   User.create(googleUser)
                   Ok(views.html.index("Your new application is ready." + googleUser.email.getOrElse("no email :(")))
-              }
+              }.orTimeout(Unauthorized, 10, TimeUnit.SECONDS).flatMap(
+                _ match {
+                  case Left(a) => Promise.pure(a)
+                  case Right(n) => Promise.pure(n)
+                }
+              )
             }
           }
       } getOrElse (Unauthorized)

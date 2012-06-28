@@ -1,7 +1,11 @@
+
+
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc._
 import models.User
+import play.mvc.Http.Request
+import play.api.mvc.Request
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,4 +21,15 @@ object UserController extends Controller {
     implicit request =>
       Ok(views.html.users(User.findAll()))
   }
+
+//  type PartialRequest = Request[AnyContent] => Option[Result]
+//
+//  val a: PartialRequest = {
+//    case Request
+//  }
+
+  //  object Request {
+  //    def unapply(): Headers =
+  //  }
+
 }

@@ -2,18 +2,11 @@ package test
 
 import org.specs2.mutable.Specification
 import com.codahale.jerkson.Json._
-import api.Google.GoogleUser
-import org.specs2.matcher.Expectable
-import play.api.libs.openid.OpenID
-import play.api.libs.concurrent.{Thrown, Redeemed}
 import java.util.concurrent.TimeUnit
-import play.api.test.FakeApplication
-import play.api.test.Helpers._
-import api.Google.GoogleUser
-import play.api.test.FakeApplication
 import play.api.libs.concurrent.Redeemed
 import scala.Some
 import play.api.libs.concurrent.Thrown
+import api.GoogleUser
 
 class GoogleSpec extends Specification {
 

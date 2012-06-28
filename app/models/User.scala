@@ -7,6 +7,13 @@ import anorm._
 import play.api.db.DB
 import play.api.Play.current
 
+
+//sealed trait User
+//
+//case class SimpleUser(email: String, password: String, id: Pk[Long] = NotAssigned) extends User
+//
+//case class LoggedInUser(id: Pk[Long]) extends SimpleUser
+
 case class User(email: String, password: String, username: String, fullname: String, isAdmin: Boolean = false, id: Pk[Long] = NotAssigned)
 
 case class Tag(title: String, posted: util.Date, content: String, author: User)
