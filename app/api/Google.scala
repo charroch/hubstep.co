@@ -16,11 +16,12 @@ object GoogleUser {
   implicit def toUser(gu: GoogleUser): User = {
     new User(gu.email.getOrElse("noemail"), Crypto.sign(gu.id), "!", gu.givenName)
   }
+
+  def apply() = new GoogleUser("1234", Some("c@a"), Some(true), "john", "doe", "doe", "", "", "", "")
 }
 
 trait GoogleAPI {
   def fetch(token: String): Promise[GoogleUser]
-
   def auth(token: String)(f: GoogleUser => Result): Promise[Result]
 }
 

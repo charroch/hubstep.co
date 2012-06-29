@@ -8,15 +8,25 @@ import play.api.db.DB
 import play.api.Play.current
 
 
-//sealed trait User
-//
-//case class SimpleUser(email: String, password: String, id: Pk[Long] = NotAssigned) extends User
-//
-//case class LoggedInUser(id: Pk[Long]) extends SimpleUser
+sealed trait User
+case class SimpleUser(email: String, id: Pk[Long] = NotAssigned) extends User
+object SimpleUser {
+  val parser = {get[Pk[Long]]("id") ~ get[String]("email") map {
+    case pl ~ email => SimpleUser(email)
+  }}
+}
+
+case class LoggedInUser() extends SimpleUser
 
 case class User(email: String, password: String, username: String, fullname: String, isAdmin: Boolean = false, id: Pk[Long] = NotAssigned)
 
 case class Tag(title: String, posted: util.Date, content: String, author: User)
+
+trait UserService {
+  def create(user: User): Option[User]
+
+  def find(user: User): Option[User]
+}
 
 object User {
 
@@ -27,7 +37,7 @@ object User {
       get[String]("username") ~
       get[Option[String]]("fullname") ~
       get[Boolean]("isAdmin") map {
-      case pk ~ mail ~ password ~ username ~ fullname ~ isAdmin => User(mail, password, username, fullname.getOrElse(null), isAdmin, pk)
+      case SimpleUser.parser ~pk ~ mail ~ password ~ username ~ fullname ~ isAdmin => User(mail, password, username, fullname.getOrElse(null), isAdmin, pk)
     }
   }
 
@@ -59,4 +69,5 @@ object User {
     }
   }
 
+  def apply(email: String) = new User(email, "", "", "")
 }
