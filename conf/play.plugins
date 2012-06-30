@@ -1,2 +1,3 @@
 9999:service.InMemoryUserService
+5000:plugins.HeadChef
 10002:securesocial.core.providers.GoogleProvider

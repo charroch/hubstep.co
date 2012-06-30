@@ -9,7 +9,7 @@ class UserSpec extends Specification {
   "A user" should {
     "be created" in {
       running(FakeAppNoPlugin) {
-        User.create(User("carl@novoda.com", "test", null))
+        //User.create(User("carl@novoda.com", "test", null))
         User.findAll() must have size 1
       }
     }
