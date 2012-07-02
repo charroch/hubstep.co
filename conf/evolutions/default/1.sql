@@ -1,15 +1,21 @@
-# Tasks account and tag
+# Tasks profile and tag
 
 # --- !Ups
 
-CREATE TABLE account (
+CREATE TABLE profile (
     id SERIAL PRIMARY KEY,
     email varchar(255) NOT NULL UNIQUE,
     password varchar(255) NOT NULL,
-    username varchar(255) NOT NULL,
-    fullname varchar(255),
 
-    isAdmin BOOLEAN NOT NULL DEFAULT false,
+    googleID varchar(255),
+    verifiedEmail BOOLEAN,
+    name varchar(255),
+    givenName varchar(255),
+    familyName varchar(255),
+    link varchar(255),
+    picture varchar(255),
+    gender varchar(255),
+    locale varchar(255),
 
     createdAt timestamp,
     modifiedAt timestamp
@@ -19,8 +25,8 @@ CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     uid varchar(255) NOT NULL UNIQUE,
 
-    accountId INT NOT NULL,
-    FOREIGN KEY (accountId) REFERENCES account(id),
+    profileId INT NOT NULL,
+    FOREIGN KEY (profileId) REFERENCES profile(id),
 
     createdAt timestamp,
     modifiedAt timestamp
@@ -28,5 +34,6 @@ CREATE TABLE tag (
 
 # --- !Downs
 
-DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS profile;
+DROP TABLE IF EXISTS google_profile;
 DROP TABLE IF EXISTS tag;
