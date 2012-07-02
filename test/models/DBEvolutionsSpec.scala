@@ -16,7 +16,7 @@ class DBEvolutionsSpec extends Specification {
         DB.withConnection {
           implicit connection =>
             SQL("select count(1) from account").execute()
-            //SQL("select count(1) from tag").execute()
+          //SQL("select count(1) from tag").execute()
         }
       }
       success
@@ -26,7 +26,7 @@ class DBEvolutionsSpec extends Specification {
 
   val FakeAppNoPlugin = FakeApplication(
     withoutPlugins = Seq("securesocial.core.providers.GoogleProvider"),
-    additionalConfiguration = inMemoryDatabase()
+    additionalConfiguration = inMemoryDatabase() + ("test" -> "fw")
   )
 
 }

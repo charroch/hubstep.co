@@ -9,23 +9,55 @@ import models.User
 import play.api.libs.Crypto
 
 
+/**
+ * A user as given by the API calls against Google's user profile
+ *
+ * @param id
+ * @param email
+ * @param verifiedEmail
+ * @param name
+ * @param givenName
+ * @param familyName
+ * @param link
+ * @param picture
+ * @param gender
+ * @param locale
+ */
 @JsonSnakeCase
-case class GoogleUser(id: String, email: Option[String], verifiedEmail: Option[Boolean], name: String, givenName: String, familyName: String, link: String, picture: String, gender: String, locale: String)
+case class GoogleUser(id: String,
+                      email: Option[String],
+                      verifiedEmail: Option[Boolean],
+                      name: String,
+                      givenName: String,
+                      familyName: String,
+                      link: String,
+                      picture: String,
+                      gender: String,
+                      locale: String)
 
 object GoogleUser {
+
+  /**
+   * Transforming a GoogleUser into a User insertable into the DB
+   *
+   * @param gu
+   * @return
+   */
   implicit def toUser(gu: GoogleUser): User = {
-    new User(gu.email.getOrElse("noemail"), Crypto.sign(gu.id), "!", gu.givenName)
+    new User(gu.email.getOrElse("noemail"), Crypto.sign(gu.id))
   }
 
   def apply() = new GoogleUser("1234", Some("c@a"), Some(true), "john", "doe", "doe", "", "", "", "")
 }
 
 trait GoogleAPI {
+
   def fetch(token: String): Promise[GoogleUser]
-  def auth(token: String)(f: GoogleUser => Result): Promise[Result]
+
+  def auth[T](token: String)(f: GoogleUser => T): Promise[T]
 }
 
-object Google extends GoogleAPI {
+class Google extends GoogleAPI {
 
   /**
    *
@@ -43,7 +75,11 @@ object Google extends GoogleAPI {
     })
   }
 
-  def auth(token: String)(f: GoogleUser => Result): Promise[Result] = fetch(token).map(f)
+  def auth[T](token: String)(f: (GoogleUser) => T) = fetch(token).map(f)
+}
+
+object Google {
+  def apply() = new Google
 }
 
 sealed abstract class GoogleAPIError(val id: String, val message: String) extends Throwable

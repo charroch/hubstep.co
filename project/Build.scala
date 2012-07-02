@@ -11,6 +11,7 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
+    "com.github.twitter" % "bootstrap" % "2.0.2",
     "org.mockito" % "mockito-all" % "1.9.0" % "test"
   )
 
@@ -19,8 +20,9 @@ object ApplicationBuild extends Build {
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-    // Add your own project settings here
-    org.sbtidea.SbtIdeaPlugin.settings: _*
+    resolvers ++= Seq(
+      "webjars" at "http://webjars.github.com/m2"
+    )
   ).dependsOn(secureSocial)
 
 }

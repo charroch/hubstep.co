@@ -1,28 +1,16 @@
 package models
 
+import anorm.{NotAssigned, Pk}
 import anorm.SqlParser._
+import java.util
 import anorm._
 import play.api.db.DB
 import play.api.Play.current
-import util.Random
+import scala.util.Random
+import org.h2.jdbc.JdbcSQLException
 
-case class User(email: String,
-                password: String,
-                profile: Option[Profile] = None,
-                googleInfo: Option[GoogleInfo] = None,
-                id: Pk[Long] = NotAssigned)
 
-case class Profile(firstName: String,
-                   lastName: String,
-                   givenName: String,
-                   picture: String)
-
-case class GoogleInfo(googleId: String,
-                      verifiedEmail: Boolean,
-                      link: String,
-                      picture: String,
-                      gender: String,
-                      locale: String)
+case class User(email: String, password: String, id: Pk[Long] = NotAssigned)
 
 trait UserService {
   def create(user: User): Option[User]
@@ -30,38 +18,13 @@ trait UserService {
   def find(user: User): Option[User]
 }
 
-object UserP {
-
-  val profileParser = {
-    get[String]("firstName") ~
-      get[String]("lastName") ~
-      get[String]("givenName") ~
-      get[String]("picture") map {
-      case firstName ~ lastName ~ givenName ~ picture =>
-        Profile(firstName, lastName, givenName, picture)
-    }
-  }
-
-  val googleInfo = {
-    get[String]("googleId") ~
-      get[Boolean]("verifiedEmail") ~
-      get[String]("link") ~
-      get[String]("picture") ~
-      get[String]("gender") ~
-      get[String]("locale") map {
-      case googleId ~ verifiedEmail ~ link ~ picture ~ gender ~ locale =>
-        GoogleInfo(googleInfo, verifiedEmail, link, picture, gender, locale)
-    }
-
-  }
+object User {
 
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("email") ~
-      get[String]("password") ~
-      profileParser ~ googleInfo map {
-      case pk ~ email ~ password ~ pp ~ gi =>
-        User(email, password, Some(pp), Some(gi), pk)
+      get[String]("password") map {
+      case pk ~ email ~ password => User(email, password, pk)
     }
   }
 
@@ -70,27 +33,31 @@ object UserP {
       SQL("select * from account").as(User.parser *)
   }
 
-  def find(user: User): Option[User] = None
 
-  def find(email: String): Option[User] = None
+  def find(user: User): Option[User] = DB.withConnection {
+    implicit connection =>
+      SQL("select * from account where email={email};").on('email -> user.email).as(User.parser *) match {
+        case Nil => None
+        case head :: Nil => Some(head)
+      }
+  }
+
+  def find(email: String): Option[User] = find(User(email))
 
   def create(user: User): User = {
     DB.withConnection {
       implicit connection =>
         val id: Long = SQL(
           """
-          INSERT INTO account(email, password, username, fullname, isadmin) VALUES ({email}, {password}, {username}, {fullname}, {isAdmin});
+          INSERT INTO account(email, password) VALUES ({email}, {password});
           """.stripMargin)
           .on(
           'email -> user.email,
-          'password -> user.password,
-          'username -> user.email,
-          'fullname -> user.fullname,
-          'isAdmin -> user.isAdmin
+          'password -> user.password
         ).executeInsert().get
-        return User(user.email)
+        return User(user.email, user.password, new Id(id))
     }
   }
 
-  def apply(email: String) = User(email, Random.nextString(64))
+  def apply(email: String) = new User(email, Random.alphanumeric.take(6).mkString)
 }

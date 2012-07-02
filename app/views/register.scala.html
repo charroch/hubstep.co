@@ -1,5 +1,4 @@
-
-@(loginForm: Form[controllers.Login])(implicit flash: Flash)
+@(registrationForm: Form[controllers.Registration])(implicit flash: Flash)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -21,16 +20,17 @@
 }
 
 @main("Super Simple Sample") {
-@form(action = routes.UserController.auth, 'class -> "form-horizontal") {
+@form(action = routes.UserController.register, 'class -> "form-horizontal") {
 <fieldset>
     <legend>Registration</legend>
-    @loginForm.globalError.map { error =>
+    @registrationForm.globalError.map { error =>
     <div class='row'>
         <div class="alert alert-error">@error.message</div>
     </div>
     }
-    @input(loginForm("email"), "Email", 'email)
-    @input(loginForm("password"), "Password", 'password)
+    @input(registrationForm("email"), "Email", 'email)
+    @input(registrationForm("password"), "Password", 'password)
+    @input(registrationForm("confirm"), "Confirm Password", 'password)
 </fieldset>
 <input type="submit" class="btn" value="Register"/>
 }

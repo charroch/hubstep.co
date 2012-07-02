@@ -9,7 +9,7 @@ trait API extends Plugin {
 }
 
 class HeadChef(app: play.api.Application) extends API {
-  val google = api.Google
+  val google = new api.Google
 }
 
 object Application {
