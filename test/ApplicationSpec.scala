@@ -30,7 +30,7 @@ class ApplicationSpec extends Specification {
         val login = routeAndCall(request).get
         status(login) must equalTo(UNAUTHORIZED)
       }
-    }.pendingUntilFixed
+    }
 
     "fail if a token is provided but bad response from Google service" in {
       running(FakeAppNoPlugin) {

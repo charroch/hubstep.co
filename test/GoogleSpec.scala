@@ -67,14 +67,14 @@ class GoogleSpec extends Specification {
   "A call to Google Service" should {
 
     "fail if wrong token provided" in {
-      api.Google.fetch("wrong").extend(_.value match {
+      api.Google().fetch("wrong").extend(_.value match {
         case Thrown(n) => success
         case _ => failure
       }).await(10, TimeUnit.SECONDS).get
     }
 
     "not fail if token is correct" in {
-      api.Google.fetch("WILLNOWORK").extend(_.value match {
+      api.Google().fetch("WILLNOWORK").extend(_.value match {
         case Redeemed(user) => {
           user.name must be_==("Carl-Gustaf Harroch")
           success

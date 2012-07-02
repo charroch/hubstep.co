@@ -6,21 +6,11 @@ import java.util
 import anorm._
 import play.api.db.DB
 import play.api.Play.current
+import scala.util.Random
+import org.h2.jdbc.JdbcSQLException
 
 
-sealed trait User
-case class SimpleUser(email: String, id: Pk[Long] = NotAssigned) extends User
-object SimpleUser {
-  val parser = {get[Pk[Long]]("id") ~ get[String]("email") map {
-    case pl ~ email => SimpleUser(email)
-  }}
-}
-
-case class LoggedInUser() extends SimpleUser
-
-case class User(email: String, password: String, username: String, fullname: String, isAdmin: Boolean = false, id: Pk[Long] = NotAssigned)
-
-case class Tag(title: String, posted: util.Date, content: String, author: User)
+case class User(email: String, password: String, id: Pk[Long] = NotAssigned)
 
 trait UserService {
   def create(user: User): Option[User]
@@ -33,11 +23,8 @@ object User {
   val parser = {
     get[Pk[Long]]("id") ~
       get[String]("email") ~
-      get[String]("password") ~
-      get[String]("username") ~
-      get[Option[String]]("fullname") ~
-      get[Boolean]("isAdmin") map {
-      case SimpleUser.parser ~pk ~ mail ~ password ~ username ~ fullname ~ isAdmin => User(mail, password, username, fullname.getOrElse(null), isAdmin, pk)
+      get[String]("password") map {
+      case pk ~ email ~ password => User(email, password, pk)
     }
   }
 
@@ -47,27 +34,30 @@ object User {
   }
 
 
-  def find(user: User): Option[User] = None
+  def find(user: User): Option[User] = DB.withConnection {
+    implicit connection =>
+      SQL("select * from account where email={email};").on('email -> user.email).as(User.parser *) match {
+        case Nil => None
+        case head :: Nil => Some(head)
+      }
+  }
 
-  def find(email: String): Option[User] = None
+  def find(email: String): Option[User] = find(User(email))
 
   def create(user: User): User = {
     DB.withConnection {
       implicit connection =>
         val id: Long = SQL(
           """
-          INSERT INTO account(email, password, username, fullname, isadmin) VALUES ({email}, {password}, {username}, {fullname}, {isAdmin});
+          INSERT INTO account(email, password) VALUES ({email}, {password});
           """.stripMargin)
           .on(
           'email -> user.email,
-          'password -> user.password,
-          'username -> user.email,
-          'fullname -> user.fullname,
-          'isAdmin -> user.isAdmin
+          'password -> user.password
         ).executeInsert().get
-        return User(user.email, user.password, user.username, user.fullname, user.isAdmin, new Id(id))
+        return User(user.email, user.password, new Id(id))
     }
   }
 
-  def apply(email: String) = new User(email, "", "", "")
+  def apply(email: String) = new User(email, Random.alphanumeric.take(6).mkString)
 }

@@ -15,8 +15,8 @@ class MockGoogle(app: play.api.Application) extends API {
       case MockGoogle.THROW => throw new TimeoutException()
     }
 
-    def auth(token: String)(f: (GoogleUser) => Result): Promise[Result] = token match {
-      case MockGoogle.OK => Promise.pure(Results.Ok)
+    def auth[T](token: String)(f: (GoogleUser) => T): Promise[T] = token match {
+      case MockGoogle.OK => Promise.pure(Results.Ok.asInstanceOf[T])
       case MockGoogle.THROW => throw new TimeoutException()
     }
   }
