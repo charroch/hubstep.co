@@ -1,13 +1,10 @@
 package models
 
-import anorm.{NotAssigned, Pk}
 import anorm.SqlParser._
-import java.util
 import anorm._
 import play.api.db.DB
 import play.api.Play.current
 import scala.util.Random
-import org.h2.jdbc.JdbcSQLException
 
 
 case class User(email: String, password: String, id: Pk[Long] = NotAssigned)

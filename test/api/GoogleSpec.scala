@@ -1,4 +1,4 @@
-package test
+package api
 
 import org.specs2.mutable.Specification
 import com.codahale.jerkson.Json._
@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 import play.api.libs.concurrent.Redeemed
 import scala.Some
 import play.api.libs.concurrent.Thrown
-import api.GoogleUser
+import api.{Error, GoogleError, GoogleAPIError, GoogleUser}
 
 class GoogleSpec extends Specification {
 
@@ -60,6 +60,34 @@ class GoogleSpec extends Specification {
           "https://lh6.googleusercontent.com/photo.jpg",
           "male",
           "en-GB")
+      )
+    }
+
+    "parse a failed response as JSON" in {
+      parse[GoogleAPIError](
+        """
+          |{
+          | "error": {
+          |  "errors": [
+          |   {
+          |    "domain": "global",
+          |    "reason": "required",
+          |    "message": "Required",
+          |    "locationType": "parameter",
+          |    "location": "resource.longUrl"
+          |   }
+          |  ],
+          |  "code": 400,
+          |  "message": "Required"
+          | }
+          |}
+        """.stripMargin
+      ) should be_==(
+        GoogleAPIError(
+          GoogleError(List(
+            Error("global", "required", "Required", "parameter", "resource.longUrl")
+          ), 400, "Required")
+        )
       )
     }
   }
