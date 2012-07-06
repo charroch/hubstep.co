@@ -4,8 +4,9 @@ import play.api.test.{Helpers, FakeApplication}
 import play.api.test.Helpers._
 
 import play.api.mvc._
+import org.specs2.mutable.Specification
 
-trait TestUtils {
+trait HubStepSpecs extends Specification {
 
   def running[T](block: => T): T = {
     Helpers.running(fakeApp)(block)

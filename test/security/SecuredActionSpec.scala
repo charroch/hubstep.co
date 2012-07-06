@@ -1,17 +1,16 @@
 package security
 
-import org.specs2.mutable.Specification
-import test.TestUtils
+import test.HubStepSpecs
 import play.api.mvc.BodyParsers.parse
 import play.api.test._
 import play.api.test.Helpers._
-import play.api.mvc.{AsyncResult, SimpleResult, Results}
+import play.api.mvc.{AsyncResult, Results}
 import models.{UserService, User}
 import mocks.MockGoogle
-import play.api.libs.concurrent.{Thrown, Redeemed, Promise}
+import play.api.libs.concurrent.{Thrown, Redeemed}
 import java.util.concurrent.TimeoutException
 
-class SecuredActionSpec extends Specification with TestUtils {
+class SecuredActionSpec extends HubStepSpecs {
 
   val secure = new SecuredAction {
     val userService = new UserService {
@@ -21,6 +20,7 @@ class SecuredActionSpec extends Specification with TestUtils {
   }
 
   "A secured action" should {
+
     "be accessible with user session" in {
       running {
         secure.Authenticated(parse.anyContent)(authRequest => Results.Ok)(
@@ -48,7 +48,7 @@ class SecuredActionSpec extends Specification with TestUtils {
         )
         result2.asInstanceOf[AsyncResult].result.await must beLike {
           case Thrown(a) => ok
-          case a:TimeoutException => ok
+          case a: TimeoutException => ok
           case _ => ko("exception thrown")
         }
       }
