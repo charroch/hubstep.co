@@ -8,7 +8,6 @@ import api.google.Profile
 import scala.Right
 import scala.Left
 
-
 trait SecuredAction extends api.google.UserService {
 
   case class AuthenticatedRequest[A](val user: User, request: Request[A]) extends WrappedRequest(request)
@@ -54,7 +53,6 @@ trait SecuredAction extends api.google.UserService {
   }
 
   import Profile._
-
   def googleAuth(token: String): Promise[User] = get(token).map(
     googleUser =>
       googleUser.fold(

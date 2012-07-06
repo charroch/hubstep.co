@@ -6,7 +6,6 @@ import play.api.db.DB
 import play.api.Play.current
 import scala.util.Random
 
-
 case class User(email: String, password: String, id: Pk[Long] = NotAssigned)
 
 trait UserService {
