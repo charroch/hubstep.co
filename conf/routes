@@ -13,6 +13,10 @@ GET     /users                      controllers.UserController.all
 
 GET     /playground/android         controllers.Playground.android
 
+POST    /tag/:id/message            controllers.Tag.push(id: String)
+
+# Create a hook for a given tag
+POST    /tag/:id/hooks              controllers.Hooks.create(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -18,8 +18,13 @@
     </div>
 </div>
 }
+@main("Create a new user") {
+        <h3>Create a new User</h3>
+        <p>
+            Go on, come join the fun
+        </p>
+        <br />
 
-@main("Super Simple Sample") {
 @form(action = routes.UserController.register, 'class -> "form-horizontal") {
 <fieldset>
     <legend>Registration</legend>
@@ -32,6 +37,6 @@
     @input(registrationForm("password"), "Password", 'password)
     @input(registrationForm("confirm"), "Confirm Password", 'password)
 </fieldset>
-<input type="submit" class="btn" value="Register"/>
+<input type="submit" class="btn btn-primary btn-large" value="Register"/>
 }
 }

@@ -35,6 +35,10 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
       }
     }
 
+    "should fail if user session exist but no user in DB" in {
+      todo
+    }
+
     "be accessible with X-Android-Authentication" in {
       running {
         secure.Authenticated(authRequest => Results.Ok)(
@@ -46,13 +50,16 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
       }
     }
 
+    "create a user with X-Android-Authentication if no user in DB" in {
+      todo
+    }
+
     "be inaccessible if X-Android-Authentication is present but Google service unavail" in {
-      ga.orTimeout(any, anyLong, any).returns(throw new TimeoutException())
+      //ga.orTimeout(any, anyLong, any).returns(Promise.pure(any[Exception])))
       running {
-        val result2 = secure.Authenticated(parse.anyContent)(authRequest => Results.Ok)(
+        secure.Authenticated(parse.anyContent)(authRequest => Results.Ok)(
           FakeRequest(GET, "/anything").withHeaders("X-Android-Authorization" -> MockGoogle.THROW)
-        )
-        result2.asInstanceOf[AsyncResult].result.await must beLike {
+        ).asInstanceOf[AsyncResult].result.await must beLike {
           case Thrown(a) => ok
           case a: TimeoutException => ok
           case _ => ko("exception thrown")
