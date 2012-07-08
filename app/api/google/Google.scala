@@ -13,14 +13,11 @@ import api.google.API.Error
 
 trait API[T, P] {
 
-  type WSResponse = Either[Error, T]
-  type WSRequest = P => WSRequestHolder
-
-  def setup: WSRequest
+  def setup: P => WSRequestHolder
 
   def parser: Reads[T]
 
-  def get(r: P): Promise[WSResponse] = setup(r).get().map(
+  def get(r: P): Promise[Either[Error, T]] = setup(r).get().map(
     response =>
       response.status match {
         case Status.OK => Right(parser.reads(response.json))
@@ -52,17 +49,13 @@ object Profile {
       (json \ "locale").as[String]
     )
   }
-}
 
-trait UserService extends API[Profile, String] {
-  def setup = (token: String) => WS.url("https://www.googleapis.com/oauth2/v1/userinfo").withHeaders(("Authorization" -> ("Bearer %s" format token)))
-
-  def parser = Profile.ProfileRead
 }
 
 object API {
 
   case class Error(errors: Seq[ErrorMessage], code: Int, message: String)
+
   case class ErrorMessage(domain: String, reason: String, message: String, locationType: String, location: String)
 
   object Error {
@@ -90,5 +83,21 @@ object API {
         )
       }
     }
+
   }
+
+}
+
+/**
+ * Main landing trait
+ */
+trait UserServiceComponent {
+
+  val userService: UserService = new UserService
+
+  class UserService extends API[Profile, String] {
+    def setup = (token: String) => WS.url("https://www.googleapis.com/oauth2/v1/userinfo").withHeaders(("Authorization" -> ("Bearer %s" format token)))
+    def parser = Profile.ProfileRead
+  }
+
 }

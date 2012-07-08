@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq(
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
     "com.github.twitter" % "bootstrap" % "2.0.2",
-    "org.mockito" % "mockito-all" % "1.9.0" % "test"
+    "org.mockito" % "mockito-all" % "1.9.0" % "test",
+    "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
   )
 
   val secureSocial = PlayProject(

@@ -1,5 +1,4 @@
-
-@(loginForm: Form[controllers.Login])(implicit flash: Flash)
+@(loginForm: Form[controllers.Login])(implicit flash: Flash, request: RequestHeader)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -32,6 +31,6 @@
     @input(loginForm("email"), "Email", 'email)
     @input(loginForm("password"), "Password", 'password)
 </fieldset>
-<input type="submit" class="btn" value="Register"/>
+<input type="submit" class="btn" value="Login"/>
 }
 }

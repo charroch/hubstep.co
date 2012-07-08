@@ -1,4 +1,4 @@
-@(users: Seq[User])
+@(users: Seq[User])(implicit request: RequestHeader)
 @main(title = "login") {
 <table class="table table-striped">
     <thead>

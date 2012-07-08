@@ -8,6 +8,7 @@ GET     /                           controllers.Application.index
 GET     /login                      controllers.UserController.login
 POST    /auth                       controllers.UserController.auth
 GET     /signup                     controllers.UserController.index
+GET     /logout                     controllers.UserController.logout
 POST    /users                     controllers.UserController.register
 GET     /users                      controllers.UserController.all
 

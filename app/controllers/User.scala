@@ -18,6 +18,11 @@ object UserController extends Controller {
       Ok(views.html.register(registrationForm))
   }
 
+  def logout = Action {
+    implicit request =>
+      Redirect(routes.Application.index).withNewSession
+  }
+
   def login = Action {
     implicit request =>
       Ok(views.html.login(loginForm))
@@ -28,7 +33,7 @@ object UserController extends Controller {
       loginForm.bindFromRequest.fold(
         form => BadRequest(views.html.login(form)),
         login => {
-          Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession("email" -> login.email)
+          Redirect(routes.Application.index()).flashing("message" -> "User logged in!").withSession("email" -> login.email)
         }
       )
   }
@@ -39,7 +44,7 @@ object UserController extends Controller {
         form => BadRequest(views.html.register(form)),
         registration => {
           User.create(User(registration.email, Crypto.sign(registration.password)))
-          Redirect(routes.Application.index()).flashing("message" -> "User Registered!")
+          Redirect(routes.Application.index()).flashing("message" -> "User Registered!").withSession("email" -> registration.email)
         }
       )
   }
@@ -71,8 +76,8 @@ object UserController extends Controller {
       verifying("Email/Password does not match", fields => fields match {
       case Login(user, password) => {
         User.find(user) match {
-          case None => true
-          case Some(user) => !(Crypto.sign(user.password) == Crypto.sign(password))
+          case None => false
+          case Some(user) => (user.password ==Crypto.sign(password))
         }
       }
     })
