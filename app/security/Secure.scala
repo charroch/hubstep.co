@@ -62,7 +62,5 @@ trait SecuredAction extends api.google.UserService {
         throw new Exception, p => userService.create(toUser(p)).get
       )
   )
-
-
 }
 

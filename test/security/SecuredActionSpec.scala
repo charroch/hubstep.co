@@ -16,14 +16,13 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
 
   implicit val us: UserService = smartMock[UserService]
 
-  val mockResponse = smartMock[Promise[API]]
+  //val mockResponse = smartMock[Promise[API]]
 
   implicit val ga: Promise[User] = smartMock[Promise[User]]
   ga.orTimeout(any, anyLong, any).returns(Promise.pure(Left(User(anyString))))
 
   def secure(implicit us: UserService, ga: Promise[User]) = new SecuredAction {
     val userService = us
-    override def get(token:String):  Promise[WSResponse] = mockResponse
     override def googleAuth(s: String)(implicit toUser: Profile => User) = ga
   }
 
