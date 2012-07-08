@@ -15,11 +15,13 @@ trait SecuredAction extends api.google.UserService {
   val userService: DBUserService
 
   sealed trait AuthRequest
+
   case object Session extends AuthRequest {
     def unapply[A](request: play.api.mvc.Request[A]): Option[User] = request.session.get("email").map(
       email => User(email)
     )
   }
+
   case object AndroidHeader extends AuthRequest {
     def unapply[A](request: play.api.mvc.Request[A]): Option[Promise[User]] = request.headers.get("X-Android-Authorization").map(
       token => googleAuth(token)
@@ -38,7 +40,8 @@ trait SecuredAction extends api.google.UserService {
   }
 
   import play.api.mvc.BodyParsers._
-  def Authenticated(f: AuthenticatedRequest[AnyContent] => Result): Action[AnyContent]  = {
+
+  def Authenticated(f: AuthenticatedRequest[AnyContent] => Result): Action[AnyContent] = {
     Authenticated(parse.anyContent)(f)
   }
 
@@ -53,11 +56,13 @@ trait SecuredAction extends api.google.UserService {
   }
 
   import Profile._
-  def googleAuth(token: String): Promise[User] = get(token).map(
+  def googleAuth(token: String)(implicit toUser: Profile => User): Promise[User] = get(token).map(
     googleUser =>
       googleUser.fold(
-        throw new Exception, p => userService.create(p).get
+        throw new Exception, p => userService.create(toUser(p)).get
       )
   )
+
+
 }
 

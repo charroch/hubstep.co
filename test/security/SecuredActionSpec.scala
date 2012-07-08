@@ -10,18 +10,21 @@ import mocks.MockGoogle
 import play.api.libs.concurrent.{Promise, Thrown, Redeemed}
 import java.util.concurrent.{TimeUnit, TimeoutException}
 import org.specs2.mock.Mockito
+import api.google.{API, Profile}
 
 class SecuredActionSpec extends HubStepSpecs with Mockito {
 
   implicit val us: UserService = smartMock[UserService]
+
+  val mockResponse = smartMock[Promise[API]]
 
   implicit val ga: Promise[User] = smartMock[Promise[User]]
   ga.orTimeout(any, anyLong, any).returns(Promise.pure(Left(User(anyString))))
 
   def secure(implicit us: UserService, ga: Promise[User]) = new SecuredAction {
     val userService = us
-
-    override def googleAuth(s: String) = ga
+    override def get(token:String):  Promise[WSResponse] = mockResponse
+    override def googleAuth(s: String)(implicit toUser: Profile => User) = ga
   }
 
   "A secured action" should {
@@ -51,7 +54,15 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
     }
 
     "create a user with X-Android-Authentication if no user in DB" in {
-      todo
+      running {
+        us.find(any[User]) returns None
+        secure.Authenticated(authRequest => Results.Ok)(
+          FakeRequest(GET, "/anything").withHeaders("X-Android-Authorization" -> MockGoogle.OK)
+        ).asInstanceOf[AsyncResult].result.await must beLike {
+          case Redeemed(a) => there was one(us).create(any[User])
+          case _ => ko
+        }
+      }
     }
 
     "be inaccessible if X-Android-Authentication is present but Google service unavail" in {
