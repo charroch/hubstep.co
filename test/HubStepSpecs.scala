@@ -4,11 +4,12 @@ import play.api.test.{Helpers, FakeApplication}
 import play.api.test.Helpers._
 
 import play.api.mvc._
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{Around, Specification}
 import api.google.{API, Profile, UserServiceComponent}
 import models.{User, UserRepositoryComponent}
 import org.specs2.mock.Mockito
 import play.api.libs.concurrent.Promise
+import org.specs2.execute
 
 trait HubStepSpecs extends TestingEnvironment {
 
@@ -17,10 +18,11 @@ trait HubStepSpecs extends TestingEnvironment {
   }
 
   def fakeApp = FakeApplication(
-    withoutPlugins = Seq("securesocial.core.providers.GoogleProvider", "plugins.HeadChef"),
-    additionalConfiguration = inMemoryDatabase(),
-    additionalPlugins = Seq("mocks.MockGoogle")
+    withoutPlugins = Seq("plugins.HeadChef"),
+    additionalConfiguration = inMemoryDatabase()
   )
+
+
 }
 
 trait TestingEnvironment extends UserServiceComponent with UserRepositoryComponent with Specification with Mockito {
@@ -34,8 +36,15 @@ trait TestingEnvironment extends UserServiceComponent with UserRepositoryCompone
   class MockedUserService extends UserService {
     override def get(r: String): Promise[Either[API.Error, Profile]] = super.get(r)
   }
+
 }
 
-object Fixture {
-  val DB = n
+object fakeAppw extends Around {
+
+  def around[T](t: => T)(implicit evidence$1: (T) => execute.Result) = Helpers.running(fakeApp)(t)
+
+  def fakeApp = FakeApplication(
+    withoutPlugins = Seq("plugins.HeadChef"),
+    additionalConfiguration = inMemoryDatabase()
+  )
 }

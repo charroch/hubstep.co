@@ -14,8 +14,8 @@ trait SecuredAction extends api.google.UserServiceComponent with UserRepositoryC
 
   sealed trait AuthRequest
   case object Session extends AuthRequest {
-    def unapply[A](request: play.api.mvc.Request[A]): Option[User] = request.session.get("email").map(
-      email => userRepository.find(User(email)).get
+    def unapply[A](request: play.api.mvc.Request[A]): Option[User] = request.session.get("email").flatMap(
+      email => userRepository.find(User(email))
     )
   }
   case object AndroidHeader extends AuthRequest {
@@ -34,7 +34,7 @@ trait SecuredAction extends api.google.UserServiceComponent with UserRepositoryC
           case AndroidHeader(user) => {
             AsyncResult.apply(liftToResult(user, request, f))
           }
-          case _ => Results.Unauthorized.withNewSession
+          case _ => Results.Unauthorized
         }
     }
   }

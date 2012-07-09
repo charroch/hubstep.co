@@ -1,6 +1,6 @@
 package security
 
-import test.HubStepSpecs
+import test.{fakeAppw, HubStepSpecs}
 import play.api.mvc.BodyParsers.parse
 import play.api.test._
 import play.api.test.Helpers._
@@ -12,6 +12,8 @@ import java.util.concurrent.TimeoutException
 import org.specs2.mock.Mockito
 import api.google.{API, Profile}
 import org.specs2.matcher.Matcher
+import org.specs2.mutable.Around
+import org.specs2.execute.Result
 
 class SecuredActionSpec extends HubStepSpecs with Mockito {
 
@@ -47,8 +49,13 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
       }
     }
 
-    "should fail if user session exist but no user in DB" in Fixture.DB.empty {
-      todo
+    "should fail if user session exist but no user in DB" in {
+      secure.userRepository.find(any[User]).returns(None)
+      running {
+        secure.Authenticated(parse.anyContent)(authRequest => Results.Ok)(
+          FakeRequest(GET, "/anything").withSession("email" -> "carl@novoda.com")
+        ) should be_==(Results.Unauthorized)
+      }
     }
 
     "be accessible with X-Android-Authentication" in {
@@ -61,7 +68,7 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
           FakeRequest(GET, "/anything").withHeaders("X-Android-Authorization" -> "tokentousertest")
         ).asInstanceOf[AsyncResult].result.await must beLike {
           case Redeemed(a) => ok
-          case  _ => ko
+          case _ => ko
         }
       }
     }
@@ -97,6 +104,6 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
           FakeRequest(GET, "/anything")
         ) should be_==(Results.Unauthorized)
       }
-    }.pendingUntilFixed
+    }
   }
 }
