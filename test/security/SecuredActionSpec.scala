@@ -73,6 +73,10 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
       }
     }
 
+    "check against user registry if user exists and compare to Google profile" in {
+      todo
+    }
+
     "create a user with X-Android-Authentication if no user in DB" in {
       running {
         userRepository.find(any[User]) returns None

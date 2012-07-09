@@ -19,7 +19,7 @@
                 <ul class="nav pull-right">
 
                     @request.session.get("email") match {
-                        case Some(e) => { <li>@profile("carl@novoda.com")</li> }
+                        case Some(e) => { <li>@profile(e)</li> }
                         case None => {
                     <li><a href="@routes.UserController.index">Sign Up</a></li>
                     <li class="divider-vertical"></li>
