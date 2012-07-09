@@ -14,6 +14,8 @@ GET     /users                      controllers.UserController.all
 
 GET     /playground/android         controllers.Playground.android
 
+GET    /tag                        controllers.Tag.create
+POST    /tag                        controllers.Tag.create
 POST    /tag/:id/message            controllers.Tag.push(id: String)
 
 # Create a hook for a given tag

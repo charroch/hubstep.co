@@ -17,29 +17,6 @@ trait UserRepositoryComponent {
   }
 }
 
-//
-//trait UserServiceComponent {
-//  this: UserRepositoryComponent =>
-//  val userService = new UserService
-//  class UserService {
-//    def authenticate(username: String, password: String): User = userRepository.authenticate(username, password)
-//    def create(username: String, password: String) = userRepository.create(new User(username, password))
-//    def delete(user: User) = userRepository.delete(user)
-//  }
-//
-//}
-//
-//object ComponentRegistry extends UserServiceComponent with UserRepositoryComponent {
-//  override val userRepository = new UserRepository
-//  override val userService = new UserService
-//}
-//
-//trait TestingEnvironment extends  UserServiceComponent with UserRepositoryComponent with Specification with Mockito
-//{
-//  val userRepository = mock(classOf[UserRepository])
-//  val userService = mock(classOf[UserService])
-//}
-
 trait UserService {
   def create(user: User): Option[User]
 
