@@ -35,3 +35,7 @@ trait TestingEnvironment extends UserServiceComponent with UserRepositoryCompone
     override def get(r: String): Promise[Either[API.Error, Profile]] = super.get(r)
   }
 }
+
+object Fixture {
+  val DB = n
+}

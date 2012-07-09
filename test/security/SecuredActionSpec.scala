@@ -47,7 +47,7 @@ class SecuredActionSpec extends HubStepSpecs with Mockito {
       }
     }
 
-    "should fail if user session exist but no user in DB" in {
+    "should fail if user session exist but no user in DB" in Fixture.DB.empty {
       todo
     }
 
