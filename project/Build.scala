@@ -16,14 +16,10 @@ object ApplicationBuild extends Build {
     "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
   )
 
-  val secureSocial = PlayProject(
-    appName + "-securesocial", appVersion, mainLang = SCALA, path = file("modules/securesocial")
-  )
-
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     resolvers ++= Seq(
       "webjars" at "http://webjars.github.com/m2"
     )
-  ).dependsOn(secureSocial)
+  )
 
 }
