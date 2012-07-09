@@ -1,4 +1,4 @@
-@(tagForm: Form[controllers.Tag])(implicit flash: Flash, request: RequestHeader)
+@(createTagForm: Form[controllers.Tag])(implicit flash: Flash, request: RequestHeader)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -24,13 +24,13 @@
 </p>
 <br />
 
-@form(action = routes.UserController.register, 'class -> "form-horizontal") {
+@form(action = routes.Tag.create, 'class -> "form-horizontal") {
 <fieldset>
     <legend>Registration</legend>
     @createTagForm.globalError.map { error =>
-    <div class='row'>
-        <div class="alert alert-error">@error.message</div>
-    </div>
+        <div class='row'>
+            <div class="alert alert-error">@error.message</div>
+        </div>
     }
     @input(createTagForm("tagId"), "Tag ID", 'tagId)
 </fieldset>

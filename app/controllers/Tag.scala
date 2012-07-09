@@ -1,15 +1,17 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{RequestHeader, Action, Controller}
 import security.SecuredAction
 import play.api.data.Form
 import play.api.data.Forms._
-import controllers.Registration
-import models.User
 
 case class Tag(tagId: String)
 
 object Tag extends Controller with SecuredAction {
+
+  case class Accepting2(val method: String) {
+    def unapply(request: RequestHeader): Boolean = request.method.equalsIgnoreCase(method)
+  }
 
   def push(nfcId: String) = Action {
     implicit request =>
@@ -18,7 +20,14 @@ object Tag extends Controller with SecuredAction {
 
   def create = Authenticated {
     implicit request =>
-      Ok(views.html.tag_create(createTagForm))
+
+      request match {
+        case Accepting2("GET") => Ok("Hello world")
+        case Accepting2("POST") => Ok("world")
+        case Accepts.Html => Ok(views.html.tag_create(createTagForm))
+        case Accepts.Json => Redirect(routes.Application.index())
+        case _ => Ok(views.html.tag_create(createTagForm))
+      }
   }
 
   def createTagForm = Form(
@@ -26,5 +35,4 @@ object Tag extends Controller with SecuredAction {
       "tagId" -> nonEmptyText
     )(Tag.apply)(Tag.unapply)
   )
-
 }
