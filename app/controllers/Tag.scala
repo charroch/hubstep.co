@@ -4,10 +4,48 @@ import play.api.mvc.{RequestHeader, Action, Controller}
 import security.SecuredAction
 import play.api.data.Form
 import play.api.data.Forms._
+import models.User
+import models.{Tag => Tags}
+import play.api.libs.Crypto
 
 case class Tag(tagId: String)
 
 object Tag extends Controller with SecuredAction {
+
+  /**
+   * List all tags created by a user.
+   *
+   * @return
+   */
+  def all = Authenticated {
+    implicit request =>
+      Ok(views.html.all_tags(
+        Tags belongsTo request.user
+      ))
+  }
+
+  def view(nfcId: String) = Authenticated {
+    implicit request =>
+      (Tags find nfcId).map {
+        tag =>
+          Ok(views.html.tag.single(tag))
+      }.getOrElse(
+        NotFound("Tag not found")
+      )
+  }
+
+
+  class Method(method: String) {
+    def unapply(request: RequestHeader) = if (request.method.equalsIgnoreCase(method)) {
+      Some(request)
+    } else {
+      None
+    }
+  }
+
+  case object GET extends Method("GET")
+
+  case object POST extends Method("POST")
 
   case class Accepting2(val method: String) {
     def unapply(request: RequestHeader): Boolean = request.method.equalsIgnoreCase(method)
@@ -20,19 +58,32 @@ object Tag extends Controller with SecuredAction {
 
   def create = Authenticated {
     implicit request =>
-
       request match {
-        case Accepting2("GET") => Ok("Hello world")
-        case Accepting2("POST") => Ok("world")
-        case Accepts.Html => Ok(views.html.tag_create(createTagForm))
-        case Accepts.Json => Redirect(routes.Application.index())
-        case _ => Ok(views.html.tag_create(createTagForm))
+        case POST(r) => {
+          createTagForm.bindFromRequest.fold(
+            form => BadRequest(views.html.tag_create(form)),
+            tag => {
+              models.Tag.create(tag.tagId, request.user)
+              Redirect(routes.Application.index()).flashing("message" -> "Tag Registered!")
+            }
+          )
+        }
+        case GET(r) => Ok(views.html.tag_create(createTagForm))
+        //case Accepts.Html => Ok(views.html.tag_create(createTagForm))
+        //case Accepts.Json => Redirect(routes.Application.index())
+        //case _ => Ok(views.html.tag_create(createTagForm))
       }
+  }
+
+  private def insertTag(user: User, tag: Tag) {
+    models.Tag.create(tag.tagId, user)
   }
 
   def createTagForm = Form(
     mapping(
       "tagId" -> nonEmptyText
-    )(Tag.apply)(Tag.unapply)
+    )(Tag.apply)(Tag.unapply) verifying("Tag already registered", fields => fields match {
+      case Tag(id) => models.Tag.find(id).isEmpty
+    })
   )
 }

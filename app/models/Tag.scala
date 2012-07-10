@@ -45,4 +45,16 @@ object Tag {
       }
   }
 
+  def belongsTo(user: User): Seq[Tag] = DB.withConnection {
+    implicit connection =>
+      SQL(
+        """
+          |SELECT *
+          |FROM tag
+          |INNER JOIN account
+          |ON account.id=tag.account_id
+          |WHERE tag.account_id={userId};
+        """.stripMargin).on('userId -> user.id).as(Tag.parser *)
+  }
+
 }

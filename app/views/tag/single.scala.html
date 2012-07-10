@@ -1,0 +1,41 @@
+@(tag: models.Tag)(implicit request: RequestHeader)
+@main(title = "tags") {
+
+<ul class="breadcrumb">
+    <li>
+        <a href="#">Home</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">@tag.owner.email</a> <span class="divider">/</span>
+    </li>
+    <li class="active">@tag.tagID</li>
+</ul>
+
+
+<div class="row">
+    <div class="span3">
+        <ul class="nav nav-list">
+            <li class="nav-header">
+                List header
+            </li>
+            <li>
+                <a href="#">
+                    <i class="icon-book"></i>
+                    Web Hooks
+                </a>
+            </li>
+            <li class="nav-header">
+                List header
+            </li>
+            <li>
+                <a href="#">Stats</a>
+            </li>
+        </ul>
+    </div>
+    <div class="span8">
+        <h3>SOME CONTENT</h3>
+    </div>
+</div>
+
+
+}
