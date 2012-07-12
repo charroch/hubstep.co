@@ -1,16 +1,30 @@
 package controllers
 
-import play.api.mvc.{RequestHeader, Action, Controller}
+import play.api.mvc.{SimpleResult, RequestHeader, Action, Controller}
 import security.SecuredAction
 import play.api.data.Form
 import play.api.data.Forms._
 import models.User
 import models.{Tag => Tags}
-import play.api.libs.Crypto
+import models.{Hook => Hooks}
+import play.api.http.{ContentTypeOf, Writeable}
+import play.api.Logger
 
 case class Tag(tagId: String)
 
 object Tag extends Controller with SecuredAction {
+
+  implicit val tagWritable = new Writeable[Tags](tag =>
+    "HElloWorld".getBytes
+  )
+
+  implicit val contentType = new ContentTypeOf[Tags](mimeType = Some("text/html"))
+
+
+  //  type ContentTypeWritable[-A] = Acceptable[A] => Writeable[A]
+
+  // Ok
+  //def apply[C](content: C)(implicit writeable: Writeable[C], contentTypeOf: ContentTypeOf[C]): SimpleResult[C] = {
 
   /**
    * List all tags created by a user.
@@ -19,6 +33,7 @@ object Tag extends Controller with SecuredAction {
    */
   def all = Authenticated {
     implicit request =>
+      request.accept.foreach(a => Logger.info(a))
       Ok(views.html.all_tags(
         Tags belongsTo request.user
       ))
@@ -26,9 +41,17 @@ object Tag extends Controller with SecuredAction {
 
   def view(nfcId: String) = Authenticated {
     implicit request =>
-      (Tags find nfcId).map {
-        tag =>
-          Ok(views.html.tag.single(tag))
+      for (
+        tag <- Tags find nfcId
+        hooks <- Hooks against tag
+      ) yield (
+      Ok("")
+      )
+//      (Tags find nfcId).map {
+//        tag =>
+//          (Hooks against tag).
+//          Ok(views.html.tag.single(tag))
+//        //  Ok(tag)
       }.getOrElse(
         NotFound("Tag not found")
       )
