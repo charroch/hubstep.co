@@ -1,0 +1,36 @@
+@(loginForm: Form[controllers.Login])(implicit flash: Flash, request: RequestHeader)
+
+@import play.api.i18n._
+@import views.html.helper._
+@import helper.twitterBootstrap._
+
+@input(field: Field, label: String, fieldType: Symbol = 'text) = {
+<div class="control-group @if(field.hasErrors) {error}">
+    <label class="control-label" for="@field.id">@label</label>
+
+    <div class="controls">
+        <input type="@fieldType.name" value="@field.value" name="@field.id"/>
+        @if(field.hasErrors){
+        <span class="help-inline">
+          @Messages(field.error.head.message)
+        </span>
+        }
+    </div>
+</div>
+}
+
+@main("Super Simple Sample") {
+@form(action = routes.UserController.auth, 'class -> "form-horizontal") {
+<fieldset>
+    <legend>Registration</legend>
+    @loginForm.globalError.map { error =>
+    <div class='row'>
+        <div class="alert alert-error">@error.message</div>
+    </div>
+    }
+    @input(loginForm("email"), "Email", 'email)
+    @input(loginForm("password"), "Password", 'password)
+</fieldset>
+<input type="submit" class="btn" value="Login"/>
+}
+}

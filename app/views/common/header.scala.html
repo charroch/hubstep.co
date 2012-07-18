@@ -1,0 +1,44 @@
+@()(implicit request: RequestHeader)
+<div class="navbar navbar-fixed-top">
+
+    <div class="navbar-inner">
+        <div class="container"><!-- Collapsable nav bar -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <!-- Your site name for the upper left corner of the site -->
+            <a class="brand">HubStep</a>
+
+            <!-- Start of the nav bar content -->
+            <div class="nav-collapse">
+                <!-- Other nav bar content -->
+                <!-- The drop down menu -->
+                <ul class="nav pull-right">
+
+                    @request.session.get("email") match {
+                        case Some(e) => { <li>@profile(e)</li> }
+                        case None => {
+                    <li><a href="@routes.UserController.index">Sign Up</a></li>
+                    <li class="divider-vertical"></li>
+                    <li><a href="@routes.UserController.login">Login</a></li>
+                    }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+    // Setup drop down menu
+    $('.dropdown-toggle').dropdown();
+
+    // Fix input element click problem
+    $('.dropdown input, .dropdown label').click(function(e) {
+    e.stopPropagation();
+    });
+    });
+</script>

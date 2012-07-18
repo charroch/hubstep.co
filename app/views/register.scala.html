@@ -1,0 +1,42 @@
+@(registrationForm: Form[controllers.Registration])(implicit flash: Flash, request: RequestHeader)
+
+@import play.api.i18n._
+@import views.html.helper._
+@import helper.twitterBootstrap._
+
+@input(field: Field, label: String, fieldType: Symbol = 'text) = {
+<div class="control-group @if(field.hasErrors) {error}">
+    <label class="control-label" for="@field.id">@label</label>
+
+    <div class="controls">
+        <input type="@fieldType.name" value="@field.value" name="@field.id"/>
+        @if(field.hasErrors){
+        <span class="help-inline">
+          @Messages(field.error.head.message)
+        </span>
+        }
+    </div>
+</div>
+}
+@main("Create a new user") {
+        <h3>Create a new User</h3>
+        <p>
+            Go on, come join the fun
+        </p>
+        <br />
+
+@form(action = routes.UserController.register, 'class -> "form-horizontal") {
+<fieldset>
+    <legend>Registration</legend>
+    @registrationForm.globalError.map { error =>
+    <div class='row'>
+        <div class="alert alert-error">@error.message</div>
+    </div>
+    }
+    @input(registrationForm("email"), "Email", 'email)
+    @input(registrationForm("password"), "Password", 'password)
+    @input(registrationForm("confirm"), "Confirm Password", 'password)
+</fieldset>
+<input type="submit" class="btn btn-primary btn-large" value="Register"/>
+}
+}

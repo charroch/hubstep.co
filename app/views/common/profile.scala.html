@@ -1,0 +1,33 @@
+@(email: String)
+<li class="drop down">
+
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+        @email |
+        <span>
+            <img src="http://www.gravatar.com/avatar/@{play.api.libs.Codecs.md5(email.getBytes)}?s=15"/>
+        </span>
+        <strong class="caret"></strong></a>
+    <ul class="dropdown-menu">
+        <li>
+            <div class="modal-header">
+                <h3>@email</h3>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="span3">
+                        <div class="row">
+                            <div class="span1"><img src="http://www.gravatar.com/avatar/@{play.api.libs.Codecs.md5(email.getBytes)}?s=75" alt="avatar"></div>
+                            <div class="span2"> <h5>@email</h5>
+                                <a href="#" class="link-modal" data-original-title="">Account</a>  <a href="#" class="link-modal" data-original-title="">Settings-Privacy</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-info pull-left" data-original-title="">My profile</a>
+                <a class="btn btn-info" href="@routes.UserController.logout" data-original-title="">Logout</a>
+            </div>
+        </li>
+    </ul>
+</li>

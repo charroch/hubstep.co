@@ -1,0 +1,23 @@
+@(tags: Seq[models.Tag])(implicit request: RequestHeader)
+@main(title = "tags") {
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>nfc_id</th>
+        <th>user</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    @tags.map { tag =>
+    <tr>
+        <td>@tag.id</td>
+        <td>@tag.tagID</td>
+        <td>@tag.owner.email</td>
+        <td><a href="@routes.Tag.view(tag.tagID)"><i class="icon-edit icon-orange" /></a></td>
+    </tr>
+    }
+    </tbody>
+</table>
+}

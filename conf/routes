@@ -1,0 +1,32 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+GET     /login                      controllers.UserController.login
+POST    /auth                       controllers.UserController.auth
+GET     /signup                     controllers.UserController.index
+GET     /logout                     controllers.UserController.logout
+POST    /users                     controllers.UserController.register
+GET     /users                      controllers.UserController.all
+
+
+POST    /tag                        controllers.Tag.create
+GET     /tag/create                 controllers.Tag.create
+GET     /tag2                       controllers.Tag.all
+GET     /tag/:id                    controllers.Tag.view(id: String)
+
+
+
+POST    /tag/:id/message            controllers.Tag.push(id: String)
+
+# Create a hook for a given tag
+POST    /tag/:id/hook/              controllers.Hook.create(id: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Playground
+GET     /playground/test         controllers.Playground.test
