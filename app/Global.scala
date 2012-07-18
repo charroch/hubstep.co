@@ -8,6 +8,7 @@ object Global extends GlobalSettings {
   override def onStart(app: Application) {
     app.mode match {
       case Mode.Dev => fixture
+      case _ =>
     }
   }
 
