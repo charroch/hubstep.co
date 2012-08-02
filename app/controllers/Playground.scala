@@ -1,11 +1,10 @@
 package controllers
 
-import play.api.mvc.{Accepting, RequestHeader, Action, Controller}
+import play.api.mvc.{RequestHeader, Action, Controller}
 import security.SecuredAction
-import models.{User, UserService}
-import play.api.libs.json.{Writes, Json}
+import models.User
+import play.api.libs.json.Json
 import play.api.libs.json.Json._
-import com.typesafe.plugin.MailerPlugin
 
 object Playground extends Controller with SecuredAction {
 
@@ -80,8 +79,8 @@ object Playground extends Controller with SecuredAction {
     val mail = use[MailerPlugin].email
     mail.setSubject("HubStep - pinged")
     mail.addRecipient("carl@novoda.com")
-    mail.addFrom("Peter Hausel <carl@hubstep.com>")
-    mail.sendHtml("<html>html</html>" )
+    mail.addFrom("Carl Hubbing <carl@hubstep.com>")
+    mail.sendHtml("<html>You just been pinged you!</html>")
     Created("message created")
   }
 }
