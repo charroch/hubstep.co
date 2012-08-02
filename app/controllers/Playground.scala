@@ -5,6 +5,7 @@ import security.SecuredAction
 import models.User
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
+import play.api.Play.current
 
 object Playground extends Controller with SecuredAction {
 
