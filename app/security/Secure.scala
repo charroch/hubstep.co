@@ -60,5 +60,6 @@ trait SecuredAction extends api.google.UserServiceComponent with UserRepositoryC
         throw new Exception, p => userRepository.create(toUser(p)).get
       )
   )
+
 }
 

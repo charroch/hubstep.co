@@ -30,3 +30,20 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Playground
 GET     /playground/test         controllers.Playground.test
+GET     /playground/android      controllers.Playground.android
+
+# API for now
+GET     /api/auth                controllers.Playground.auth
+GET     /api/hook                controllers.Playground.hooks
+GET     /api/hook/:id            controllers.Playground.hook(id:String)
+POST    /api/hook                controllers.Playground.createHook
+#{nfcId:nfc-id, hooks:[id1,id2,id3]}
+POST    /api/tag                 controllers.Playground.createTag
+
+#Notify server that a particular tag has been scanned
+POST    /api/tag/:nfc/message  controllers.Playground.createMessage(nfc:String)
+
+#Create hooks to be registered against specific tag
+#POST /tag/{nfcId}/hooks
+#[{name:name, url:url}]
+

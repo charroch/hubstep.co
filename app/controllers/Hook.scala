@@ -12,4 +12,5 @@ object Hook extends Controller with SecuredAction {
       Ok("Say hello to authenticated request")
   }
 
+
 }
