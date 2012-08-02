@@ -79,7 +79,7 @@ object Playground extends Controller with SecuredAction {
 
     val mail = use[MailerPlugin].email
     mail.setSubject("HubStep - pinged")
-    mail.addRecipient("carl@novoda.com")
+    mail.addRecipient("jamie@novoda.com")
     mail.addFrom("Carl Hubbing <carl@hubstep.com>")
     mail.sendHtml("<html>You just been pinged you!</html>")
     Created("message created")
