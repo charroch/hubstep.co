@@ -22,6 +22,10 @@ object ApplicationBuild extends Build {
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     resolvers ++= Seq(
       "webjars" at "http://webjars.github.com/m2"
-    )
+    ),
+    testOptions in Test += Tests.Setup(() =>
+      System.setProperty("config.resource", "test.conf")
+    ),
+    javaOptions in run += "-Dconfig.resource=local.conf"
   )
 }
