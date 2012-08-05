@@ -7,6 +7,8 @@ import play.api.libs.concurrent.{Redeemed, Promise}
 import play.api.libs.ws.Response
 import play.api.libs.json.{JsValue, Reads, Json}
 import api.google.API.{ErrorMessage, Error}
+import play.api.libs.concurrent._
+import play.api.libs.concurrent.execution.defaultContext
 
 class GoogleApiSpec extends Specification with Mockito {
 

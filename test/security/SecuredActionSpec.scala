@@ -14,6 +14,8 @@ import api.google.{API, Profile}
 import org.specs2.matcher.Matcher
 import org.specs2.mutable.Around
 import org.specs2.execute.Result
+import play.api.libs.concurrent._
+import play.api.libs.concurrent.execution.defaultContext
 
 class SecuredActionSpec extends HubStepSpecs with Mockito {
 

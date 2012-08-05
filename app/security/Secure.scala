@@ -2,11 +2,14 @@ package security
 
 import play.api.mvc._
 import models.{UserService => DBUserService, UserRepositoryComponent, User}
-import play.api.libs.concurrent.Promise
+import play.api.libs.concurrent.{PlayPromise, Promise}
 import java.util.concurrent.TimeUnit
 import api.google.Profile
 import scala.Right
 import scala.Left
+
+import play.api.libs.concurrent._
+import play.api.libs.concurrent.execution.defaultContext
 
 trait SecuredAction extends api.google.UserServiceComponent with UserRepositoryComponent {
 
@@ -44,7 +47,6 @@ trait SecuredAction extends api.google.UserServiceComponent with UserRepositoryC
   }
 
   def liftToResult[A](promiseOfUser: Promise[User], request: Request[A], f: AuthenticatedRequest[A] => Result): Promise[Result] = {
-
     promiseOfUser.orTimeout(Results.Unauthorized, 10, TimeUnit.SECONDS).map {
       eitherUserOrTimeout =>
         eitherUserOrTimeout match {
