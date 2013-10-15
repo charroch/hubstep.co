@@ -11,6 +11,12 @@ case class Tag(tagID: String, owner: User, id: Pk[Long] = NotAssigned)
 
 object Tag {
 
+  val parserNoUser = {
+    get[Pk[Long]]("id") ~ get[String]("tagId") map {
+      case pk ~ tagId => Tag(tagId, null, pk)
+    }
+  }
+
   val parser = {
     get[Pk[Long]]("id") ~ get[String]("tagId") ~ User.parser map {
       case pk ~ tagId ~ user => Tag(tagId, user, pk)

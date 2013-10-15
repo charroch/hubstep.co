@@ -1,4 +1,4 @@
-@(tag: models.Tag)(implicit request: RequestHeader)
+@(tag: models.Tag, hooks: Seq[models.Hook])(implicit request: RequestHeader)
 @main(title = "tags") {
 
 <ul class="breadcrumb">
@@ -7,6 +7,9 @@
     </li>
     <li>
         <a href="#">@tag.owner.email</a> <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="#">tag</a> <span class="divider">/</span>
     </li>
     <li class="active">@tag.tagID</li>
 </ul>
@@ -33,7 +36,22 @@
         </ul>
     </div>
     <div class="span8">
-        <h3>SOME CONTENT</h3>
+
+        <h1>Info <span class="label label-success">Active</span></h1>
+        <p>Last ping happened on January the 7th by user unknown</p>
+
+        <form method="post" class="well" action="@routes.Hook.create(tag.tagID)">
+            <label>Label name</label>
+            <input type="text" class="span3" placeholder="Type something…">
+            <span class="help-block">Example block-level help text here.</span>
+            <label class="checkbox">
+                <input type="checkbox"> Check me out
+            </label>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+
+        <a href="@routes.Hook.create(tag.tagID)">Create a new webhook</a>
+        @hook.hooks(hooks)
     </div>
 </div>
 

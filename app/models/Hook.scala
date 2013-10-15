@@ -1,18 +1,17 @@
 package models
 
+import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 import play.api.db.DB
-import scala.Some
 import anorm.~
-import scala.Some
 
 case class Hook(url: String, tag: Tag, id: Pk[Long] = NotAssigned)
 
 object Hook {
 
   val parser = {
-    get[Pk[Long]]("id") ~ get[String]("url") ~ Tag.parser map {
+    get[Pk[Long]]("id") ~ get[String]("url") ~ Tag.parserNoUser map {
       case pk ~ url ~ tag => Hook(url, tag, pk)
     }
   }

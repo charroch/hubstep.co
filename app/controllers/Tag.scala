@@ -9,6 +9,7 @@ import models.{Tag => Tags}
 import models.{Hook => Hooks}
 import play.api.http.{ContentTypeOf, Writeable}
 import play.api.Logger
+import scala.Some
 
 case class Tag(tagId: String)
 
@@ -36,25 +37,15 @@ object Tag extends Controller with SecuredAction {
       request.accept.foreach(a => Logger.info(a))
       Ok(views.html.all_tags(
         Tags belongsTo request.user
-      ))
+      )) //(Writable, contenttype)
   }
 
   def view(nfcId: String) = Authenticated {
     implicit request =>
-      for (
-        tag <- Tags find nfcId
-        hooks <- Hooks against tag
-      ) yield (
-      Ok("")
-      )
-//      (Tags find nfcId).map {
-//        tag =>
-//          (Hooks against tag).
-//          Ok(views.html.tag.single(tag))
-//        //  Ok(tag)
-      }.getOrElse(
-        NotFound("Tag not found")
-      )
+      (for {
+        tag <- (Tags find nfcId)
+        hooks = (Hooks against tag)
+      } yield (Ok(views.html.tag.single(tag, hooks)))).getOrElse(NotFound("Tag not found for id " + nfcId))
   }
 
 

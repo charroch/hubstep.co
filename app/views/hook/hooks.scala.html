@@ -1,0 +1,17 @@
+@(hooks: Seq[models.Hook])(implicit request: RequestHeader)
+<table class="table">
+    <thead>
+    <tr>
+        <th>Hook ID</th>
+        <th>Hook URL</th>
+    </tr>
+    </thead>
+    <tbody>
+    @hooks.map { hook =>
+    <tr>
+        <td>@hook.id</td>
+        <td>@hook.url</td>
+    </tr>
+    }
+    </tbody>
+</table>

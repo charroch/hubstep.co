@@ -1,4 +1,3 @@
-package api.google
 
 import play.api.libs.concurrent.Promise
 import play.api.libs.ws.{Response => WSResponse, WS}
@@ -10,6 +9,7 @@ import play.api.libs.ws.WS.WSRequestHolder
 import play.api.libs.json.{JsObject, Reads, JsValue}
 import api.google.API.Error.ErrorRead
 import api.google.API.Error
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait API[T, P] {
 

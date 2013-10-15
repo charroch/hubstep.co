@@ -13,13 +13,19 @@ object ApplicationBuild extends Build {
     "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
     "com.github.twitter" % "bootstrap" % "2.0.2",
     "org.mockito" % "mockito-all" % "1.9.0" % "test",
-    "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
+    "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
+    "org.pegdown" % "pegdown" % "1.0.2" % "test",
+    "com.typesafe" %% "play-plugins-mailer" % "2.0.4",
+    "com.typesafe.akka" % "akka-testkit" % "2.0.2" % "test"
   )
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     resolvers ++= Seq(
       "webjars" at "http://webjars.github.com/m2"
-    )
+    ),
+    testOptions in Test += Tests.Setup(() =>
+      System.setProperty("config.resource", "test.conf")
+    ),
+    javaOptions in run += "-Dconfig.resource=local.conf"
   )
-
 }
